@@ -1,0 +1,12 @@
+---
+- name: ANSISTRANO | S3 | Get object from S3 and store it in /tmp
+  s3: bucket={{ ansistrano_s3_bucket }} object={{ ansistrano_s3_object }} dest=/tmp/{{ ansistrano_s3_object }} mode=get
+
+- name: ANSISTRANO | S3 | Extract object
+  unarchive:
+    src: "/tmp/{{ ansistrano_s3_object }}"
+    dest: {{ ansistrano_release_path.stdout }}
+    copy: no
+
+- name: ANSISTRANO | S3 | Cleanup
+  file: path=/tmp/{{ ansistrano_s3_object }} state=absent
